@@ -1,5 +1,6 @@
 A ssh keypair utility
 =================================================
+`python sshkey.py genkey user@hostname.fqdn.tld --alias hostname`
 
 I noticed that my SSH key management was not up to the best practices I
 intended to follow:
