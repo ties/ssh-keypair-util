@@ -19,7 +19,8 @@ def generate_key(args):
     pwd_entry = pwd.getpwuid(os.getuid())
     ssh_dir = os.path.join(pwd_entry[5], '.ssh')
     
-    key_file = os.path.join(ssh_dir, 'id_{}_{}'.format(args.type, host_clean))
+    key_file = os.path.join(ssh_dir, 'id_{}_{}@{}'.format(args.type, user,
+        host_clean))
     pub_key_file = key_file + ".pub"
 
     log.info("user: {}, file: {}".format(user, key_file))
