@@ -36,13 +36,18 @@ def generate_key(args):
         print("Set SSH defaults (no X forwarding, no agent forwarding)")
         ash.set_defaults()
 
-    ash.define_host(user, host, host, key_file)
+    if args.alias:
+        host_alias = args.alias
+    else:
+        host_alias = host
+
+    ash.define_host(user, host_alias, host, key_file)
     ash.save()
 
     # Read the key file:
 
     with open(pub_key_file, 'r') as f:
-        print("SSH public key for {}:".format(args.login))
+        print("SSH public key for {}/{}:".format(args.login, host_alias))
         print(f.read())
 
 
@@ -65,6 +70,7 @@ if __name__ == '__main__':
     genkey.add_argument('login', help='user@hostname.fqdn.tld')
     genkey.add_argument('-t', '--type', default='ed25519',
                               help='key type ({})'.format(possible_types))
+    genkey.add_argument('--alias', default=None, help='Alias for host name')
 
     genkey.set_defaults(func=generate_key)
 
