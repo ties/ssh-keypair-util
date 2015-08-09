@@ -8,6 +8,7 @@ intended to follow:
   	function.
   1. Use a unique key per `user@host`.
   2. Use modern key types (elliptic curves) when available.
+  3. Configuring the `~/.ssh/config` file correctly
 
 I automated the process of creating a SSH key and adding it to my config,
 by using [Augeas](http://augeas.net/) to manage the configuration file, and
@@ -17,6 +18,6 @@ calling `ssh-keygen` directly from Python (...).
 using.*
 
 Dependencies
-=================================================
+-------------------------------------------------
   * `python-augeas`
   * Augeas itself (available as a package on most distributions)
