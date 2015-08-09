@@ -8,8 +8,6 @@ from ssh_config import AugeasSSHConfig
 import logging
 
 log = logging.getLogger(__name__)
-logging.basicConfig()
-logging.getLogger().setLevel(logging.INFO)
 
 
 def generate_key(args):
@@ -22,18 +20,30 @@ def generate_key(args):
     ssh_dir = os.path.join(pwd_entry[5], '.ssh')
     
     key_file = os.path.join(ssh_dir, 'id_{}_{}'.format(args.type, host_clean))
+    pub_key_file = key_file + ".pub"
 
     log.info("user: {}, file: {}".format(user, key_file))
     # Step 1: Generate the key
     ssh_key(key_file, args.type) 
 
+    assert os.path.isfile(key_file) and os.path.isfile(pub_key_file)
+
     ash = AugeasSSHConfig(pwd_entry.pw_name)
+    print("Added new key to '{}'".format(ash.ssh_config))
+
     # ensure defaults
     if args.defaults:
+        print("Set SSH defaults (no X forwarding, no agent forwarding)")
         ash.set_defaults()
 
     ash.define_host(user, host, host, key_file)
     ash.save()
+
+    # Read the key file:
+
+    with open(pub_key_file, 'r') as f:
+        print("SSH public key for {}:".format(args.login))
+        print(f.read())
 
 
 if __name__ == '__main__':

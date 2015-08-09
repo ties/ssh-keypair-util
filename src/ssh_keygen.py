@@ -28,3 +28,8 @@ def ssh_key(file_name, key_type):
         args.extend(['-b', '4096'])
 
     subprocess.call(['/usr/bin/ssh-keygen'] + args, stdin=sys.stdin)
+
+
+def read_key(file_name):
+    with open(file_name, 'r'):
+        return file_name.read()

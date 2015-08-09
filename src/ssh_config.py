@@ -5,8 +5,6 @@ import os
 import logging
 
 log = logging.getLogger(__name__)
-logging.basicConfig()
-log.setLevel(logging.DEBUG)
 
 DEFAULT_CONFIG = {
     'ForwardX11': 'no',
@@ -41,7 +39,6 @@ class AugeasSSHConfig(object):
         return path
 
     def set_config_path(self, *args):
-        print("'{}': '{}'".format(self.config_path(*args[:-1]), args[-1]))
         return self.augeas.set(self.config_path(*args[:-1]), args[-1])
 
     def set_defaults(self):
