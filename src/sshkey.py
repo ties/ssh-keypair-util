@@ -18,14 +18,14 @@ def generate_key(args):
     # Get home dir
     pwd_entry = pwd.getpwuid(os.getuid())
     ssh_dir = os.path.join(pwd_entry[5], '.ssh')
-    
+
     key_file = os.path.join(ssh_dir, 'id_{}_{}@{}'.format(args.type, user,
         host_clean))
     pub_key_file = key_file + ".pub"
 
     log.info("user: {}, file: {}".format(user, key_file))
     # Step 1: Generate the key
-    ssh_key(key_file, args.type) 
+    ssh_key(key_file, args.type)
 
     assert os.path.isfile(key_file) and os.path.isfile(pub_key_file)
 
@@ -59,7 +59,6 @@ if __name__ == '__main__':
     parser.add_argument("--verbose", action="store_true", default=False,
                         help="verbose output")
     parser.add_argument('--defaults', action='store_false', help='Set ssh defaults')
-    parser.set_defaults(func=None)
 
     subs = parser.add_subparsers()
 
