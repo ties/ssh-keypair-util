@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import os
 import pwd
 
@@ -24,8 +25,12 @@ def generate_key(args):
     pub_key_file = key_file + ".pub"
 
     log.info("user: {}, file: {}".format(user, key_file))
+
+    today = datetime.datetime.today()
+    comment = "{}@{} - {}-{}-{}".format(user, host_clean, today.year,
+                                        today.month, today.day)
     # Step 1: Generate the key
-    ssh_key(key_file, args.type)
+    ssh_key(key_file, args.type, comment)
 
     assert os.path.isfile(key_file) and os.path.isfile(pub_key_file)
 
