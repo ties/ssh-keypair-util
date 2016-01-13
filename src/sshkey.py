@@ -70,7 +70,7 @@ if __name__ == '__main__':
                         help='Set ssh defaults')
     parser.add_argument('--multiplex', action='store_false',
                         help='Setup SSH multiplexing/ControlMaster')
-    parser.add_argument('--port', default=22, help='SSH port')
+    parser.add_argument('--port', default=None, type=int, help='SSH port')
 
     subs = parser.add_subparsers()
 

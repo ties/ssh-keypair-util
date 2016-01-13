@@ -84,7 +84,9 @@ class AugeasSSHConfig(object):
         config_fields['Hostname'] = host_name
         config_fields['user'] = user
         config_fields['IdentityFile'] = key_file
-        config_fields['Port'] = port
+
+        if port:
+            config_fields['Port'] = str(port)
 
         if proxy_command:
             cmd = 'ssh -q -W %h:%p {}'.format(proxy_command)
