@@ -66,9 +66,9 @@ if __name__ == '__main__':
 
     parser.add_argument("--verbose", action="store_true", default=False,
                         help="verbose output")
-    parser.add_argument('--defaults', action='store_false',
-                        help='Set ssh defaults')
-    parser.add_argument('--multiplex', action='store_false',
+    parser.add_argument('--skip-defaults', dest='defaults',
+                        action='store_false', help='Set ssh defaults')
+    parser.add_argument('--multiplex', action='store_true',
                         help='Setup SSH multiplexing/ControlMaster')
     parser.add_argument('--port', default=None, type=int, help='SSH port')
 
@@ -88,8 +88,11 @@ if __name__ == '__main__':
 
     genkey.set_defaults(func=generate_key)
 
-
     args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
 
     if args.func:
         args.func(args)

@@ -19,9 +19,10 @@ DEFAULT_MULTIPLEX = {
 
 
 def default_host_config(user, host_alias, host_name, port):
+    portspec = "_{}".format(port) if port else ""
     return {
         'IdentitiesOnly': 'yes',
-        'HostKeyAlias': "{user}@{host_name}_{port}".format(**locals())
+        'HostKeyAlias': "{user}@{host_name}{portspec}".format(**locals())
     }
 
 
@@ -36,12 +37,16 @@ class AugeasSSHConfig(object):
 
         self.ssh_dir = os.path.join(self.home_dir, '.ssh')
 
-        abs_ssh_config = os.path.join(self.ssh_dir, '.ssh/config')
+        abs_ssh_config = os.path.join(self.ssh_dir, 'config')
 
         assert os.path.isdir(self.ssh_dir)
+        # Important: Relative path, since augeas uses a relative path in its
+        # dictionary to indicate where data is saved.
         self.ssh_config = os.path.relpath(abs_ssh_config, '/')
 
-        self.augeas = augeas.Augeas()
+        log.info("config: '{}'".format(self.ssh_config))
+
+        self.augeas = augeas.Augeas(flags=augeas.Augeas.SAVE_BACKUP)
         self.augeas.load()
 
     def config_path(self, *args):
@@ -49,6 +54,8 @@ class AugeasSSHConfig(object):
         return path
 
     def set_config_path(self, *args):
+        log.debug("set_config_path({}) = '{}'".format(", ".join(args[:-1]),
+                                                      args[-1]))
         return self.augeas.set(self.config_path(*args[:-1]), args[-1])
 
     def set_defaults(self, configure_multiplex=False):
@@ -98,4 +105,5 @@ class AugeasSSHConfig(object):
             self.set_host_field(host_alias, key, value)
 
     def save(self):
+        log.debug("augeas.save()")
         self.augeas.save()
