@@ -86,6 +86,7 @@ if __name__ == '__main__':
     genkey.add_argument('--proxy_command', default=None,
                         help='(user@)?host to connect to first (ProxyCommand)')
 
+    parser.set_defaults(func=None)
     genkey.set_defaults(func=generate_key)
 
     args = parser.parse_args()
