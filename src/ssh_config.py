@@ -69,11 +69,15 @@ class AugeasSSHConfig(object):
                 os.mkdir(multiplex_dir)
 
                 defaults['ControlPath'] = "{}/%r@%h:%p".format(multiplex_dir)
+        
+        host_key = "Host[.='*']"
+        if not self.augeas.get(self.config_path('Host', '*')):
+            self.set_config_path(host_key, '*')
 
         for key, value in defaults.items():
-            if not self.augeas.get(self.config_path(key)):
+            if not self.augeas.get(self.config_path(host_key, key)):
                 log.info("[default] {} {}".format(key, value))
-                self.set_config_path(key, value)
+                self.set_config_path(host_key, key, value)
 
     def set_host_field(self, host_alias, field, value):
         host_key = "Host[.='{}']".format(host_alias)
