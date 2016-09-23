@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import os
+import platform
 import pwd
 
 from ssh_keygen import ALLOWED_TYPES, ssh_key
@@ -27,10 +28,11 @@ def generate_key(args):
     log.info("user: {}, file: {}".format(user, key_file))
 
     today = datetime.datetime.today()
-    comment = "{}@{} - {}-{}-{}".format(user, host_clean, today.year,
-                                        today.month, today.day)
+    comment = "{}@{} - {}-{}-{} - {}".format(user, host_clean, today.year,
+                                             today.month, today.day,
+                                             platform.node())
     # Step 1: Generate the key
-    ssh_key(key_file, args.type, comment)
+    ssh_key(key_file, args.type, args.rounds, comment)
 
     assert os.path.isfile(key_file) and os.path.isfile(pub_key_file)
 
@@ -82,6 +84,8 @@ if __name__ == '__main__':
     genkey.add_argument('login', help='user@hostname.fqdn.tld')
     genkey.add_argument('-t', '--type', default='ed25519',
                               help='key type ({})'.format(possible_types))
+    genkey.add_argument('-a', '--rounds', default=100,
+                        help='Number of Key Derivation Function rounds')
     genkey.add_argument('--alias', default=None, help='Alias for host name')
     genkey.add_argument('--proxy_command', default=None,
                         help='(user@)?host to connect to first (ProxyCommand)')

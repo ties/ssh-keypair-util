@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 ALLOWED_TYPES = set(['ecdsa', 'ed25519', 'rsa'])  # No rsa1/dsa
 
 
-def ssh_key(file_name, key_type, comment):
+def ssh_key(file_name, key_type, rounds, comment):
     assert key_type in ALLOWED_TYPES
 
     abs_keypath = os.path.abspath(file_name)
@@ -20,6 +20,7 @@ def ssh_key(file_name, key_type, comment):
         '-f', os.path.abspath(file_name),
         '-t', key_type,
         # '-N', "''",
+        '-a', str(rounds),
         '-C', comment,
         '-o'  # new format/use better Key Derivation Function
     ]
