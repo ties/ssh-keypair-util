@@ -22,7 +22,7 @@ def default_host_config(user, host_alias, host_name, port):
     portspec = "_{}".format(port) if port else ""
     return {
         'IdentitiesOnly': 'yes',
-        'HostKeyAlias': "{user}@{host_name}{portspec}".format(**locals())
+        'HostKeyAlias': "{host_name}{portspec}".format(**locals())
     }
 
 
