@@ -99,7 +99,7 @@ if __name__ == '__main__':
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    if args.func:
+    if hasattr(args, 'func'):
         args.func(args)
     else:
         print("You did not choose a mode")

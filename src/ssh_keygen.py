@@ -22,7 +22,8 @@ def ssh_key(file_name, key_type, rounds, comment):
         # '-N', "''",
         '-a', str(rounds),
         '-C', comment,
-        '-o'  # new format/use better Key Derivation Function
+        '-o',  # new format/use better Key Derivation Function
+        '-a', '64' # with 64 bcrypt rounds <http://www.tedunangst.com/flak/post/new-openssh-key-format-and-bcrypt-pbkdf>
     ]
 
     if key_type == 'rsa':

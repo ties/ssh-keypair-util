@@ -9,7 +9,8 @@ log = logging.getLogger(__name__)
 DEFAULT_CONFIG = {
     'ForwardX11': 'no',
     'ForwardX11Trusted': 'no',
-    'ForwardAgent': 'no'
+    'ForwardAgent': 'no',
+    'VisualHostKey': 'yes'
 }
 
 DEFAULT_MULTIPLEX = {
