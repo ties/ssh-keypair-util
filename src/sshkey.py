@@ -52,7 +52,7 @@ def generate_key(args):
         host_alias = host
 
     ash.define_host(user, host_alias, host, key_file, args.proxy_command,
-                    args.port)
+                    args.port, args.jump_host)
     ash.save()
 
     # Read the key file:
@@ -89,6 +89,8 @@ if __name__ == '__main__':
     genkey.add_argument('--alias', default=None, help='Alias for host name')
     genkey.add_argument('--proxy_command', default=None,
                         help='(user@)?host to connect to first (ProxyCommand)')
+    genkey.add_argument('--jump_host', default=None,
+                        help='jumphost to connect via')
 
     parser.set_defaults(func=None)
     genkey.set_defaults(func=generate_key)

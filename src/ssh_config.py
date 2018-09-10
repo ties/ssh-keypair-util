@@ -88,7 +88,7 @@ class AugeasSSHConfig(object):
         self.set_config_path(host_key, field, value)
 
     def define_host(self, user, host_alias, host_name, key_file,
-                    proxy_command, port, **kwargs):
+                    proxy_command, port, jump_host = None, **kwargs):
         if not os.path.isfile(key_file):
             raise ValueError("'{}' is not a valid file".format(key_file))
 
@@ -103,6 +103,9 @@ class AugeasSSHConfig(object):
         if proxy_command:
             cmd = 'ssh -q -W %h:%p {}'.format(proxy_command)
             config_fields['ProxyCommand'] = cmd
+
+        if jump_host:
+            config_fields['ProxyJump'] = jump_host
 
         config_fields.update(kwargs)
 
