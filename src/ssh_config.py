@@ -4,7 +4,7 @@ import os
 
 import logging
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 DEFAULT_CONFIG = {
     'ForwardX11': 'no',
@@ -43,11 +43,15 @@ class AugeasSSHConfig(object):
         abs_ssh_config = os.path.join(self.ssh_dir, 'config')
 
         assert os.path.isdir(self.ssh_dir)
+        # chmod the config file to correct rights
+        os.chmod(self.ssh_dir, 600)
+        os.chmod(abs_ssh_config, 600)
+
         # Important: Relative path, since augeas uses a relative path in its
         # dictionary to indicate where data is saved.
         self.ssh_config = os.path.relpath(abs_ssh_config, '/')
 
-        log.info("config: '{}'".format(self.ssh_config))
+        LOG.info("config: '{}'".format(self.ssh_config))
 
         self.augeas = augeas.Augeas(flags=augeas.Augeas.SAVE_BACKUP)
         self.augeas.load()
@@ -57,7 +61,7 @@ class AugeasSSHConfig(object):
         return path
 
     def set_config_path(self, *args):
-        log.debug("set_config_path({}) = '{}'".format(", ".join(args[:-1]),
+        LOG.debug("set_config_path({}) = '{}'".format(", ".join(args[:-1]),
                                                       args[-1]))
         return self.augeas.set(self.config_path(*args[:-1]), args[-1])
 
@@ -70,16 +74,17 @@ class AugeasSSHConfig(object):
             multiplex_dir = os.path.join(self.ssh_dir, 'multiplex')
             if not os.path.isdir(multiplex_dir):
                 os.mkdir(multiplex_dir)
+                os.chown(multiplex_dir, 600)
 
                 defaults['ControlPath'] = "{}/%r@%h:%p".format(multiplex_dir)
-        
+
         host_key = "Host[.='*']"
         if not self.augeas.get(self.config_path('Host', '*')):
             self.set_config_path(host_key, '*')
 
         for key, value in defaults.items():
             if not self.augeas.get(self.config_path(host_key, key)):
-                log.info("[default] {} {}".format(key, value))
+                LOG.info("[default] {} {}".format(key, value))
                 self.set_config_path(host_key, key, value)
 
     def set_host_field(self, host_alias, field, value):
@@ -93,6 +98,8 @@ class AugeasSSHConfig(object):
                     proxy_command, port, jump_host = None, **kwargs):
         if not os.path.isfile(key_file):
             raise ValueError("'{}' is not a valid file".format(key_file))
+        # chmod file to correct rights
+        os.chmod(key_file, 400)
 
         config_fields = default_host_config(user, host_alias, host_name, port)
         config_fields['Hostname'] = host_name
@@ -115,5 +122,5 @@ class AugeasSSHConfig(object):
             self.set_host_field(host_alias, key, value)
 
     def save(self):
-        log.debug("augeas.save()")
+        LOG.debug("augeas.save()")
         self.augeas.save()
