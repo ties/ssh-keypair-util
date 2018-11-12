@@ -15,7 +15,9 @@ DEFAULT_CONFIG = {
 
 DEFAULT_MULTIPLEX = {
     'ControlMaster': 'auto',
-    'ControlPersist': '1'
+    'ControlPersist': '1',
+    'ServerAliveInterval': '300',
+    'ServerAliveCountMax': '2',
 }
 
 

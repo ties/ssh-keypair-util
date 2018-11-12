@@ -3,6 +3,7 @@ import datetime
 import os
 import platform
 import pwd
+import sys
 
 from ssh_keygen import ALLOWED_TYPES, ssh_key
 from ssh_config import AugeasSSHConfig
@@ -10,6 +11,21 @@ from ssh_config import AugeasSSHConfig
 import logging
 
 log = logging.getLogger(__name__)
+
+
+def global_config(args):
+    # Get home dir
+    pwd_entry = pwd.getpwuid(os.getuid())
+    ssh_dir = os.path.join(pwd_entry[5], '.ssh')
+
+    ash = AugeasSSHConfig(pwd_entry.pw_name)
+    print("Setting SSH defaults in {}".format(ash.ssh_config))
+
+    if args.multiplex:
+        print("  [✔] With SSH multiplexing")
+    ash.set_defaults(args.multiplex)
+
+    ash.save()
 
 
 def generate_key(args):
@@ -78,6 +94,8 @@ if __name__ == '__main__':
 
     genkey = subs.add_parser('genkey',
                              help='Create keypair for login')
+    globalconfig = subs.add_parser('globalconfig',
+                                   help='Set-up global SSH config')
 
     possible_types = ', '.join(ALLOWED_TYPES)
 
@@ -94,6 +112,7 @@ if __name__ == '__main__':
 
     parser.set_defaults(func=None)
     genkey.set_defaults(func=generate_key)
+    globalconfig.set_defaults(func=global_config)
 
     args = parser.parse_args()
 
@@ -101,7 +120,9 @@ if __name__ == '__main__':
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    if hasattr(args, 'func'):
+    if hasattr(args, 'func') and args.func is not None:
         args.func(args)
     else:
         print("You did not choose a mode")
+        parser.print_help(sys.stderr)
+        sys.exit(1)
