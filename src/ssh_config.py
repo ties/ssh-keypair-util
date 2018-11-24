@@ -44,7 +44,7 @@ class AugeasSSHConfig(object):
 
         assert os.path.isdir(self.ssh_dir)
         # chmod the config file to correct rights
-        os.chmod(self.ssh_dir, 600)
+        os.chmod(self.ssh_dir, 700)
         os.chmod(abs_ssh_config, 600)
 
         # Important: Relative path, since augeas uses a relative path in its
