@@ -46,7 +46,10 @@ class AugeasSSHConfig(object):
         assert os.path.isdir(self.ssh_dir)
         # chmod the config file to correct rights
         os.chmod(self.ssh_dir, stat.S_IRWXU)
-        os.chmod(abs_ssh_config, (stat.S_IRUSR | stat.S_IWUSR) & stat.S_IRWXU)
+
+        if os.path.isfile(abs_ssh_config):
+            os.chmod(abs_ssh_config,
+                     (stat.S_IRUSR | stat.S_IWUSR) & stat.S_IRWXU)
 
         # Important: Relative path, since augeas uses a relative path in its
         # dictionary to indicate where data is saved.
@@ -125,3 +128,9 @@ class AugeasSSHConfig(object):
     def save(self):
         LOG.debug("augeas.save()")
         self.augeas.save()
+        # Chmod the config file - may be newly created.
+        if os.path.isfile(self.ssh_config):
+            os.chmod(self.ssh_config,
+                     (stat.S_IRUSR | stat.S_IWUSR) & stat.S_IRWXU)
+
+
