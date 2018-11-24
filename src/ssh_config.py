@@ -100,7 +100,7 @@ class AugeasSSHConfig(object):
         if not os.path.isfile(key_file):
             raise ValueError("'{}' is not a valid file".format(key_file))
         # chmod file to correct rights
-        os.chmod(key_file, 400)
+        os.chmod(key_file, stat.S_IRUSR & stat.S_IRWXU)
 
         config_fields = default_host_config(user, host_alias, host_name, port)
         config_fields['Hostname'] = host_name
