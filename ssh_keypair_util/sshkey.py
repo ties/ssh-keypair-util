@@ -5,8 +5,8 @@ import platform
 import pwd
 import sys
 
-from ssh_keygen import ALLOWED_TYPES, ssh_key
-from ssh_config import AugeasSSHConfig
+from .ssh_keygen import ALLOWED_TYPES, ssh_key
+from .ssh_config import AugeasSSHConfig
 
 import logging
 
@@ -78,7 +78,7 @@ def generate_key(args):
         print(f.read())
 
 
-if __name__ == '__main__':
+def main_func():
     parser = argparse.ArgumentParser(
         description="Interact with your ssh config and keys")
 
@@ -126,3 +126,7 @@ if __name__ == '__main__':
         print("You did not choose a mode")
         parser.print_help(sys.stderr)
         sys.exit(1)
+
+
+if __name__ == '__main__':
+    main_func()
