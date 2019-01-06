@@ -78,12 +78,12 @@ class AugeasSSHConfig(object):
             multiplex_dir = os.path.join(self.ssh_dir, 'multiplex')
             if not os.path.isdir(multiplex_dir):
                 os.mkdir(multiplex_dir)
-                os.chown(multiplex_dir, 600)
+                os.chmod(multiplex_dir, 600)
 
                 defaults['ControlPath'] = "{}/%r@%h:%p".format(multiplex_dir)
 
         host_key = "Host[.='*']"
-        if not self.augeas.get(self.config_path('Host', '*')):
+        if not self.augeas.match(self.config_path('Host', '*')):
             self.set_config_path(host_key, '*')
 
         for key, value in defaults.items():
