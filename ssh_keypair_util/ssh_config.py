@@ -80,7 +80,7 @@ class AugeasSSHConfig(object):
                 os.mkdir(multiplex_dir)
                 os.chmod(multiplex_dir, 600)
 
-                defaults['ControlPath'] = "{}/%r@%h:%p".format(multiplex_dir)
+                defaults['ControlPath'] = "{}/%r@%c:%p".format(multiplex_dir)
 
         host_key = "Host[.='*']"
         if not self.augeas.match(self.config_path('Host', '*')):
